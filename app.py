@@ -45,9 +45,13 @@ from sklearn.ensemble import RandomForestClassifier
 # Load dataset
 df = pd.read_csv("booking.csv")
 df.columns = df.columns.str.strip().str.replace(" ", "_")
-#Fix booking_status column name and encode target
 
+# Fix booking_status column name and encode target
 X = df.drop("booking_status", axis=1)
+
+# Remove non-numeric columns
+X = X.select_dtypes(include=["int64", "float64"])
+
 y = df["booking_status"].map({"Canceled": 1, "Not_Canceled": 0})
 
 model = RandomForestClassifier()
