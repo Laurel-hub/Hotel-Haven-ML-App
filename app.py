@@ -43,7 +43,7 @@ import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
 
 # Load dataset
-df = pd.read_csv("dataset.csv")
+df = pd.read_csv("booking.csv")
 
 X = df.drop("booking_status", axis=1)
 y = df["booking_status"]
