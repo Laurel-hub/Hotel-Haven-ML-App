@@ -39,7 +39,17 @@ st.write(
 # -------------------------
 # Load model + feature columns
 # -------------------------
-model = joblib.load("hotel_haven_rf_pipeline.joblib")
+import pandas as pd
+from sklearn.ensemble import RandomForestClassifier
+
+# Load dataset
+df = pd.read_csv("dataset.csv")
+
+X = df.drop("booking_status", axis=1)
+y = df["booking_status"]
+
+model = RandomForestClassifier()
+model.fit(X, y)
 
 with open("feature_columns.json", "r") as f:
     feature_columns = json.load(f)
