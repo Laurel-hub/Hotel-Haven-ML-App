@@ -52,13 +52,13 @@ X = df.drop("booking_status", axis=1)
 # Remove non-numeric columns
 X = X.select_dtypes(include=["int64", "float64"])
 
+# Save exact training columns
+feature_columns = X.columns.tolist()
+
 y = df["booking_status"].map({"Canceled": 1, "Not_Canceled": 0})
 
 model = RandomForestClassifier()
 model.fit(X, y)
-
-with open("feature_columns.json", "r") as f:
-    feature_columns = json.load(f)
 
 # -------------------------
 # Dropdown options (from your dataset)
@@ -225,9 +225,11 @@ if submitted:  # or: if st.button("Predict Cancellation Risk"):
         "reservation_dayofweek": reservation_dayofweek,
     }
 
-    df_input = pd.DataFrame([input_data]).reindex(columns=feature_columns)
+    df_input = pd.DataFrame([input_data])
 
     # Predict
+    df_input = df_input.reindex(columns=feature_columns, fill_value=0)
+    df_input = df_input.apply(pd.to_numeric, errors="coerce").fillna(0)
     proba = float(model.predict_proba(df_input)[0][1])
     risk_pct = proba * 100
 
